@@ -1,0 +1,21 @@
+version: '2'
+
+services:
+  seafile:
+    build: .
+    links:
+      - mysql
+    volumes:
+      - seafile:/seafile
+  mysql:
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 1
+    volumes:
+      - mysql:/var/lib/mysql
+    image: mysql:5.7
+
+volumes:
+  mysql:
+    driver: local
+  seafile:
+    driver: local
