@@ -49,7 +49,7 @@ read HOST_IP <<< `hostname -I`
 [ -z "${SEAFILE_URL}" ] && SEAFILE_URL="http://${HOST_IP}"
 
 sed -i "/SERVICE_URL = /c SERVICE_URL = ${SEAFILE_URL}" /seafile/conf/ccnet.conf
-cat "FILE_SERVER_ROOT = '${SEAFILE_URL}/seafhttp'" >> /seafile/conf/seahub_settings.py
+echo "FILE_SERVER_ROOT = '${SEAFILE_URL}/seafhttp'" >> /seafile/conf/seahub_settings.py
 
 touch /seafile/.installed
 [ -f /var/run/supervisord.pid ] && supervisorctl start all
