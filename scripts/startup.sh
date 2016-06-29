@@ -12,10 +12,15 @@ if [ ! -d /seafile/.installed ]; then
     rm /bin/setup
 fi
 
-# fix symlink for avatars
-if [ -d /seafile/seafile-server-latest/seahub/media/avatars ]; then
-    rm -rf /seafile/seafile-server-latest/seahub/media/avatars
-    ln -s /seafile/seahub-data/avatars /seafile/seafile-server-latest/seahub/media/avatars
+# fix seahub symlinks
+if [ ! -L /opt/seafile-server-${SEAFILE_VERSION}/seahub/media/avatars ]; then
+    rm -rf /opt/seafile-server-${SEAFILE_VERSION}/seahub/media/avatars
+    ln -s /seafile/seahub-data/avatars /opt/seafile-server-${SEAFILE_VERSION}/seahub/media/avatars
+fi
+
+if [ ! -L /opt/seafile-server-${SEAFILE_VERSION}/seahub/media/custom ]; then
+    rm -rf /opt/seafile-server-${SEAFILE_VERSION}/seahub/media/custom
+    ln -s /seafile/seahub-data/custom /opt/seafile-server-${SEAFILE_VERSION}/seahub/media/custom
 fi
 
 exec /usr/bin/supervisord -c /etc/supervisord.conf

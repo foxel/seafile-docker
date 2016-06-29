@@ -34,22 +34,46 @@ FLUSH PRIVILEGES;
 EOF
 
 # temporarily copy installation files to working dir
-cp -r /opt/seafile-server-${SEAFILE_VESION} /seafile/seafile-server-${SEAFILE_VESION}
+cp -r /opt/seafile-server-${SEAFILE_VERSION} /seafile/seafile-server-${SEAFILE_VERSION}
 
-/seafile/seafile-server-${SEAFILE_VESION}/setup-seafile-mysql.sh auto -e 1 -n seafile \
+/seafile/seafile-server-${SEAFILE_VERSION}/setup-seafile-mysql.sh auto -e 1 -n seafile \
     -p 8082 -o mysql -u seafile -w seafile \
     -c ccnet_db -s seafile_db -b seahub_db
 
 # removing temporary copied installation and set up symlink
-rm -rf /seafile/seafile-server-${SEAFILE_VESION}
+rm -rf /seafile/seafile-server-${SEAFILE_VERSION}
 rm /seafile/seafile-server-latest
-ln -s /opt/seafile-server-${SEAFILE_VESION} /seafile/seafile-server-latest
+ln -s /opt/seafile-server-${SEAFILE_VERSION} /seafile/seafile-server-latest
 
 read HOST_IP <<< `hostname -I`
 [ -z "${SEAFILE_URL}" ] && SEAFILE_URL="http://${HOST_IP}"
 
-sed -i "/SERVICE_URL = /c SERVICE_URL = ${SEAFILE_URL}" /seafile/conf/ccnet.conf
-echo "FILE_SERVER_ROOT = '${SEAFILE_URL}/seafhttp'" >> /seafile/conf/seahub_settings.py
+crudini --set /seafile/conf/ccnet.conf General SERVICE_URL "${SEAFILE_URL}"
+
+crudini --merge /seafile/conf/seafile.conf <<'EOF'
+[fileserver]
+port = 8082
+host = 127.0.0.1
+EOF
+
+crudini --merge /seafile/conf/seafdav.conf <<'EOF'
+[WEBDAV]
+enabled = true
+port = 8080
+host = 127.0.0.1
+fastcgi = true
+share_name = /seafdav/
+EOF
+
+cat >> /seafile/conf/seahub_settings.py <<EOF
+ENABLE_SIGNUP = False
+ACTIVATE_AFTER_REGISTRATION = False
+FILE_SERVER_ROOT = '${SEAFILE_URL}/seafhttp'
+ENABLE_THUMBNAIL = True
+THUMBNAIL_ROOT = '/seafile/seahub-data/thumbnail/thumb/'
+EOF
+
+mkdir -p /seafile/seahub-data/custom
 
 touch /seafile/.installed
 [ -f /var/run/supervisord.pid ] && supervisorctl start all
