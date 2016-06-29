@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ ! -d /seafile/.installed ]; then
+if [ ! -f /seafile/.installed ]; then
     ln -s /scripts/setup.sh /bin/setup
 
     echo "Please run setup. e.g. docker-compose exec seafile setup"
@@ -13,15 +13,20 @@ if [ ! -d /seafile/.installed ]; then
 fi
 
 # fix seahub symlinks
-if [ ! -L /opt/seafile-server-${SEAFILE_VERSION}/seahub/media/avatars ]; then
-    rm -rf /opt/seafile-server-${SEAFILE_VERSION}/seahub/media/avatars
-    ln -s /seafile/seahub-data/avatars /opt/seafile-server-${SEAFILE_VERSION}/seahub/media/avatars
+if [ ! -L ${SEAFILE_PATH}/seahub/media/avatars ]; then
+    rm -rf ${SEAFILE_PATH}/seahub/media/avatars
+    ln -s /seafile/seahub-data/avatars ${SEAFILE_PATH}/seahub/media/avatars
 fi
 
-if [ ! -L /opt/seafile-server-${SEAFILE_VERSION}/seahub/media/custom ]; then
-    rm -rf /opt/seafile-server-${SEAFILE_VERSION}/seahub/media/custom
-    ln -s /seafile/seahub-data/custom /opt/seafile-server-${SEAFILE_VERSION}/seahub/media/custom
+if [ ! -L ${SEAFILE_PATH}/seahub/media/custom ]; then
+    rm -rf ${SEAFILE_PATH}/seahub/media/custom
+    ln -s /seafile/seahub-data/custom ${SEAFILE_PATH}/seahub/media/custom
 fi
+
+# fix seafile install path symlinks
+for folder in ccnet conf logs seafile-data seahub-data; do
+   [ -L /opt/seafile/${folder} ] || ln -s /seafile/${folder} /opt/seafile/${folder}
+done
 
 exec /usr/bin/supervisord -c /etc/supervisord.conf
 

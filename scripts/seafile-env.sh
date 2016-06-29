@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TOPDIR="/seafile"
-INSTALLPATH="${TOPDIR}/seafile-server-latest"
+INSTALLPATH="${SEAFILE_PATH}"
 ccnet_conf_dir="${TOPDIR}/ccnet"
 central_config_dir="${TOPDIR}/conf"
 seafile_ini="${ccnet_conf_dir}/seafile.ini"

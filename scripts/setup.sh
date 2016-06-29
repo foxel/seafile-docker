@@ -34,16 +34,15 @@ FLUSH PRIVILEGES;
 EOF
 
 # temporarily copy installation files to working dir
-cp -r /opt/seafile-server-${SEAFILE_VERSION} /seafile/seafile-server-${SEAFILE_VERSION}
+cp -r "${SEAFILE_PATH}" /seafile/seafile-server
 
-/seafile/seafile-server-${SEAFILE_VERSION}/setup-seafile-mysql.sh auto -e 1 -n seafile \
+/seafile/seafile-server/setup-seafile-mysql.sh auto -e 1 -n seafile \
     -p 8082 -o mysql -u seafile -w seafile \
     -c ccnet_db -s seafile_db -b seahub_db
 
 # removing temporary copied installation and set up symlink
-rm -rf /seafile/seafile-server-${SEAFILE_VERSION}
+rm -rf /seafile/seafile-server
 rm /seafile/seafile-server-latest
-ln -s /opt/seafile-server-${SEAFILE_VERSION} /seafile/seafile-server-latest
 
 read HOST_IP <<< `hostname -I`
 [ -z "${SEAFILE_URL}" ] && SEAFILE_URL="http://${HOST_IP}"
