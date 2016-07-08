@@ -32,7 +32,10 @@ RUN \
     ln -s /run/seafile /opt/seafile/pids && \
     ln -s "${SEAFILE_PATH}" /opt/seafile/latest && \
     ln -s /etc/nginx/sites-available/seafile.conf /etc/nginx/sites-enabled/seafile.conf && \
-    mkdir -p /seafile
+    mkdir -p /seafile && \
+    # seafile user
+    useradd -r -s /bin/false seafile && \
+    chown seafile:seafile /run/seafile
 
 WORKDIR "/seafile"
 
