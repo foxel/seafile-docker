@@ -2,7 +2,7 @@ FROM ubuntu:14.04
 
 ENV \
     DEBIAN_FRONTEND=noninteractive \
-    SEAFILE_VERSION=5.1.3
+    SEAFILE_VERSION=5.1.4
 
 RUN \
     apt-get update && \
