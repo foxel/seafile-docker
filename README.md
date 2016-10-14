@@ -40,6 +40,6 @@ volumes:
 
 ### 5.1.x => 6.0.x
 ```
-docker-compose exec /scripts/upgrade.sh 6.0.0
+docker-compose exec seafile /scripts/upgrade.sh 6.0.0
 ```
 
