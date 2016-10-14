@@ -13,7 +13,7 @@ version: '2'
 
 services:
   seafile:
-    image: foxel/seafile:5.1.4
+    image: foxel/seafile:6.0.4
     ports:
       - "9080:80"
     environment:
@@ -35,3 +35,11 @@ volumes:
   seafile:
     driver: local
 ```
+
+## UPRAGING
+
+### 5.1.x => 6.0.x
+```
+docker-compose exec /scripts/upgrade.sh 6.0.0
+```
+
