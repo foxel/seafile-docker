@@ -13,7 +13,7 @@ version: '2'
 
 services:
   seafile:
-    image: foxel/seafile:6.0.4
+    image: foxel/seafile:6.0.5
     ports:
       - "9080:80"
     environment:
@@ -36,7 +36,7 @@ volumes:
     driver: local
 ```
 
-## UPRAGING
+## UPGRADING
 
 ### 5.1.x => 6.0.x
 ```
