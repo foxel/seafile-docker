@@ -1,18 +1,20 @@
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 
-ENV DEBIAN_FRONTEND=noninteractive
+ENV LANG=C.UTF-8 \
+    DEBIAN_FRONTEND=noninteractive
 
 RUN \
     apt-get update && \
     apt-get install --no-install-recommends -y \
-        wget mysql-client supervisor nginx crudini \
+        wget mysql-client supervisor nginx crudini ffmpeg python-pip \
         python2.7 libpython2.7 python-setuptools python-imaging \
         python-ldap python-mysqldb python-memcache python-urllib3 && \
-    update-locale LANG=C.UTF-8 && \
+    pip install pillow moviepy && \
+    apt-get remove -y --purge python-pip && \
     rm -rf /var/lib/apt/lists/* && \
     rm -f /etc/nginx/sites-enabled/*
 
-ENV SEAFILE_VERSION 6.0.9
+ENV SEAFILE_VERSION 6.1.0
 ENV SEAFILE_PATH "/opt/seafile/$SEAFILE_VERSION"
 
 RUN \
