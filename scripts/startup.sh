@@ -12,6 +12,11 @@ if [ ! -f /seafile/.installed ]; then
     rm /bin/setup
 fi
 
+echo "Waiting for MySQL..."
+while ! mysqladmin ping -hmysql -useafile -pseafile --silent; do
+    sleep 1
+done
+
 # fix seahub symlinks
 if [ ! -L ${SEAFILE_PATH}/seahub/media/avatars ]; then
     rm -rf ${SEAFILE_PATH}/seahub/media/avatars
