@@ -8,9 +8,9 @@ RUN \
     apt-get install --no-install-recommends -y \
         wget mysql-client supervisor nginx crudini ffmpeg python-pip \
         python2.7 libpython2.7 python-setuptools python-imaging \
-        python-ldap python-mysqldb python-memcache python-urllib3 && \
-    pip install pillow moviepy && \
-    apt-get remove -y --purge python-pip && \
+        python-ldap python-mysqldb python-pylibmc python-urllib3 && \
+    pip install pillow moviepy django-pylibmc && \
+    apt-get remove -y --purge --autoremove python-pip && \
     rm -rf /var/lib/apt/lists/* && \
     rm -f /etc/nginx/sites-enabled/*
 
