@@ -14,7 +14,7 @@ RUN \
     rm -rf /var/lib/apt/lists/* && \
     rm -f /etc/nginx/sites-enabled/*
 
-ENV SEAFILE_VERSION 6.2.2
+ENV SEAFILE_VERSION 6.2.3
 ENV SEAFILE_PATH "/opt/seafile/$SEAFILE_VERSION"
 
 RUN \
