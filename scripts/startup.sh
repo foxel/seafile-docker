@@ -28,6 +28,11 @@ if [ ! -L ${SEAFILE_PATH}/seahub/media/custom ]; then
     ln -s /seafile/seahub-data/custom ${SEAFILE_PATH}/seahub/media/custom
 fi
 
+if [ ! -L ${SEAFILE_PATH}/seahub/media/CACHE ]; then
+    rm -rf ${SEAFILE_PATH}/seahub/media/CACHE
+    ln -s /seafile/seahub-data/CACHE ${SEAFILE_PATH}/seahub/media/CACHE
+fi
+
 # fix seafile install path symlinks
 for folder in ccnet conf logs seafile-data seahub-data; do
    [ -L /opt/seafile/${folder} ] || ln -s /seafile/${folder} /opt/seafile/${folder}

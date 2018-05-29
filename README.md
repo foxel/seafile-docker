@@ -40,6 +40,11 @@ volumes:
 
 Upgrading is possible in step-by-step manner:
 
+### 6.2.x => 6.3.x
+```
+docker-compose exec seafile /scripts/upgrade.sh 6.3.0
+```
+
 ### 6.1.x => 6.2.x
 ```
 docker-compose exec seafile /scripts/upgrade.sh 6.2.0

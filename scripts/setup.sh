@@ -72,7 +72,9 @@ ENABLE_THUMBNAIL = True
 THUMBNAIL_ROOT = '/seafile/seahub-data/thumbnail/thumb/'
 EOF
 
-mkdir -p /seafile/seahub-data/custom /seafile/logs
+mkdir -p /seafile/seahub-data/custom \
+    /seafile/seahub-data/CACHE \
+    /seafile/logs
 
 chown -R seafile:seafile /seafile/*
 
