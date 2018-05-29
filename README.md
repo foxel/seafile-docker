@@ -13,7 +13,7 @@ version: '2'
 
 services:
   seafile:
-    image: foxel/seafile:6.2.5
+    image: foxel/seafile:6.3.0
     ports:
       - "9080:80"
     environment:
