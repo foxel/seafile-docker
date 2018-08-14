@@ -14,7 +14,6 @@ export PYTHONPATH="${INSTALLPATH}/seafile/lib/python2.6/site-packages:${INSTALLP
 export PYTHONPATH="${INSTALLPATH}/seafile/lib/python2.7/site-packages:${INSTALLPATH}/seafile/lib64/python2.7/site-packages:$PYTHONPATH"
 
 export PATH="${INSTALLPATH}/seafile/bin:$PATH"
-export ORIG_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
-export SEAFILE_LD_LIBRARY_PATH="${INSTALLPATH}/seafile/lib/:${INSTALLPATH}/seafile/lib64:${LD_LIBRARY_PATH}"
+export SEAFILE_LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu/:${INSTALLPATH}/seafile/lib/:${INSTALLPATH}/seafile/lib64:${LD_LIBRARY_PATH}"
 export LD_LIBRARY_PATH="${SEAFILE_LD_LIBRARY_PATH}"
 export SEAHUB_LOG_DIR="${TOPDIR}/logs"
