@@ -18,11 +18,12 @@ services:
       - "9080:80"
     environment:
       SEAFILE_URL: 'http://seafile.example.com'
+      MYSQL_HOST: 'seafile-db'
     links:
       - mysql
     volumes:
       - seafile:/seafile
-  mysql:
+  seafile-db:
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: 1
     volumes:

@@ -12,8 +12,10 @@ if [ ! -f /seafile/.installed ]; then
     rm /bin/setup
 fi
 
+[ -z "${MYSQL_HOST}" ] && MYSQL_HOST="mysql"
+
 echo "Waiting for MySQL..."
-while ! mysqladmin ping -hmysql -useafile -pseafile --silent; do
+while ! mysqladmin ping -h${MYSQL_HOST} -useafile -pseafile --silent; do
     sleep 1
 done
 
