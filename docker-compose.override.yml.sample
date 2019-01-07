@@ -1,13 +1,13 @@
-version: '2'
-
+version: '2.2'
 services:
   seafile:
     ports:
       - "9080:80"
     environment:
-      SEAFILE_URL: 'https://seafile.example.com'
-#    volumes:
-#      - /docker/seafile:/seafile
-#  mysql:
-#    environment:
-#      MYSQL_ROOT_PASSWORD: 'my-root-secret'
+      MYSQL_ROOT_PASSWORD: 'my-root-secret'
+      ADMIN_EMAIL: 'admin@example.com'
+      ADMIN_PASSWORD: 'admin'
+      SEAFILE_URL: 'http://seafile.example.com'
+  mysql:
+    environment:
+      MYSQL_ROOT_PASSWORD: 'my-root-secret'

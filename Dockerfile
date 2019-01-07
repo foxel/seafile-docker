@@ -34,10 +34,8 @@ RUN \
     ln -s /run/seafile /opt/seafile/pids && \
     ln -s "${SEAFILE_PATH}" /opt/seafile/latest && \
     ln -s /etc/nginx/sites-available/seafile.conf /etc/nginx/sites-enabled/seafile.conf && \
-    mkdir -p /seafile && \
-    # seafile user
-    useradd -r -s /bin/false seafile && \
-    chown seafile:seafile /run/seafile
+    ln -s /scripts/setup.sh /bin/setup && \
+    mkdir -p /seafile
 
 WORKDIR "/seafile"
 
@@ -45,4 +43,4 @@ VOLUME "/seafile"
 
 EXPOSE 80
 
-CMD ["/scripts/startup.sh"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]

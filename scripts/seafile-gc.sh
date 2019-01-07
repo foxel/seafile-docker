@@ -21,7 +21,7 @@ if [ $# -gt 0 ]; then
 fi
 
 # stop server
-[ -f /var/run/supervisord.pid ] && supervisorctl stop all
+[ -f /var/run/supervisord.pid ] && supervisorctl stop main:*
 
 "${seaf_gc}" \
     -c "${ccnet_conf_dir}" \
@@ -30,6 +30,6 @@ fi
     "$@";
 
 # starting server
-[ -f /var/run/supervisord.pid ] && supervisorctl start all
+[ -f /var/run/supervisord.pid ] && supervisorctl start main:*
 
 echo "Done"

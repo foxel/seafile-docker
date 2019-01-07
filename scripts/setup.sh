@@ -3,88 +3,49 @@
 set -e
 
 if [ -f /seafile/.installed ]; then
-    echo "Looks like seafile setup already complete"
-    exit 1
+    exit 0
 fi
 
+. /scripts/seafile-setup-env.sh
+
+[ -z "${SERVER_IP}" ] && SERVER_IP="127.0.0.1"
+[ -z "${FILESERVER_PORT}" ] && FILESERVER_PORT="8082"
+[ -z "${SEAFILE_DIR}" ] && SEAFILE_DIR="8082"
+
+SETUP_SEAFILE_MYSQL_ARGS="auto -e ${USE_EXISTING_DB} -n ${SERVER_NAME} -p ${FILESERVER_PORT} -o ${MYSQL_HOST} -u ${MYSQL_USER}  -w ${MYSQL_USER_PASSWD} -q ${MYSQL_USER_HOST} -c ${CCNET_DB} -s ${SEAFILE_DB} -b ${SEAHUB_DB}"
+if [ ! -z "${MYSQL_ROOT_PASSWD}" ]; then
+    SETUP_SEAFILE_MYSQL_ARGS="${SETUP_SEAFILE_MYSQL_ARGS} -r ${MYSQL_ROOT_PASSWD}"
+else
+    if [[ "${USE_EXISTING_DB}" != "1" ]]; then
+        echo "MYSQL_ROOT_PASSWD environment variable is undefined. Please provide MYSQL_ROOT_PASSWD environment variable when starting the container. You may also run the setup manually (e.g. docker-compose exec -e MYSQL_ROOT_PASSWD=my-root-secret seafile setup)"
+        exit 1
+    fi
+fi
+
+echo "Running setup."
+
 # clear installation
-[ -f /var/run/supervisord.pid ] && supervisorctl stop all
+[ -f /var/run/supervisord.pid ] && supervisorctl stop main:*
 rm -rf /seafile/*
-
-MYSQL_ROOT_PW="$1"
-
-[ -z "${MYSQL_ROOT_PW}" ] && echo "Now you will be asked for MySQL root password:"
-
-mysql -hmysql -uroot -p${MYSQL_ROOT_PW} <<'EOF'
-DROP DATABASE IF EXISTS `ccnet_db`;
-DROP DATABASE IF EXISTS `seafile_db`;
-DROP DATABASE IF EXISTS `seahub_db`;
-
-CREATE DATABASE `ccnet_db` CHARACTER SET = 'utf8';
-CREATE DATABASE `seafile_db` CHARACTER SET = 'utf8';
-CREATE DATABASE `seahub_db` CHARACTER SET = 'utf8';
-
-CREATE USER IF NOT EXISTS 'seafile'@'%' IDENTIFIED BY 'seafile';
-
-GRANT ALL PRIVILEGES ON `ccnet_db`.* TO `seafile`@'%';
-GRANT ALL PRIVILEGES ON `seafile_db`.* TO `seafile`@'%';
-GRANT ALL PRIVILEGES ON `seahub_db`.* TO `seafile`@'%';
-
-FLUSH PRIVILEGES;
-EOF
 
 # temporarily copy installation files to working dir
 cp -r "${SEAFILE_PATH}" /seafile/seafile-server
 
-/seafile/seafile-server/setup-seafile-mysql.sh auto -e 1 -n seafile \
-    -p 8082 -o mysql -u seafile -w seafile \
-    -c ccnet_db -s seafile_db -b seahub_db
+/seafile/seafile-server/setup-seafile-mysql.sh ${SETUP_SEAFILE_MYSQL_ARGS}
 
 # removing temporary copied installation and set up symlink
 rm -rf /seafile/seafile-server
 rm /seafile/seafile-server-latest
 
-read HOST_IP <<< `hostname -I`
-[ -z "${SEAFILE_URL}" ] && SEAFILE_URL="http://${HOST_IP}"
-
-crudini --set /seafile/conf/ccnet.conf General SERVICE_URL "${SEAFILE_URL}"
-
-crudini --merge /seafile/conf/seafile.conf <<'EOF'
-[fileserver]
-port = 8082
-host = 127.0.0.1
-EOF
-
-crudini --merge /seafile/conf/seafdav.conf <<'EOF'
-[WEBDAV]
-enabled = true
-port = 8080
-host = 127.0.0.1
-fastcgi = true
-share_name = /seafdav/
-EOF
-
-cat >> /seafile/conf/seahub_settings.py <<EOF
-ENABLE_SIGNUP = False
-ACTIVATE_AFTER_REGISTRATION = False
-FILE_SERVER_ROOT = '${SEAFILE_URL}/seafhttp'
-ENABLE_THUMBNAIL = True
-THUMBNAIL_ROOT = '/seafile/seahub-data/thumbnail/thumb/'
-EOF
+. /scripts/setup-config.sh
 
 mkdir -p /seafile/seahub-data/custom \
     /seafile/seahub-data/CACHE \
     /seafile/logs
 
-chown -R seafile:seafile /seafile/*
-
 touch /seafile/.installed
-[ -f /var/run/supervisord.pid ] && supervisorctl start all
+[ -f /var/run/supervisord.pid ] && supervisorctl start main:*
 
 echo "Now waiting for processes to start before creating admin user..."
-
 sleep 10
-
 exec /scripts/check-admin-user.sh
-
-
