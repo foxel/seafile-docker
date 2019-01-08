@@ -3,11 +3,17 @@ services:
   seafile:
     build: .
     volumes:
-      - seafile:/seafile
+      - seafile-ccnet:/seafile/ccnet
+      - seafile-seafile-data:/seafile/seafile-data
+      - seafile-seahub-data:/seafile/seahub-data
+      - seafile-conf:/seafile/conf
   mysql:
     image: mysql:5.7
     volumes:
       - mysql:/var/lib/mysql
 volumes:
   mysql: ~
-  seafile: ~
+  seafile-ccnet: ~
+  seafile-seafile-data: ~
+  seafile-seahub-data: ~
+  seafile-conf: ~

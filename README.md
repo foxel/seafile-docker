@@ -18,7 +18,10 @@ services:
       ADMIN_PASSWORD: 'admin'
       SEAFILE_URL: 'http://seafile.example.com'
     volumes:
-      - seafile:/seafile
+      - seafile-ccnet:/seafile/ccnet
+      - seafile-seafile-data:/seafile/seafile-data
+      - seafile-seahub-data:/seafile/seahub-data
+      - seafile-conf:/seafile/conf
   mysql:
     environment:
       MYSQL_ROOT_PASSWORD: 'my-root-secret'
@@ -27,7 +30,10 @@ services:
     image: mysql:5.7
 volumes:
   mysql: ~
-  seafile: ~
+  seafile-ccnet: ~
+  seafile-seafile-data: ~
+  seafile-seahub-data: ~
+  seafile-conf: ~
 ```
 
 * Start the services with `docker-compose up -d`

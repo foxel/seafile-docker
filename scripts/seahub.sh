@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ ! -f /seafile/.installed ]; then
+if [ ! -f "/seafile/conf/seahub_settings.py" ]; then
     exit 0
 fi
 

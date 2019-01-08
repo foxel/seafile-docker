@@ -2,7 +2,7 @@
 
 set -e
 
-if [ -f /seafile/.installed ]; then
+if [ -f "/seafile/conf/seahub_settings.py" ]; then
     exit 0
 fi
 
@@ -26,12 +26,19 @@ echo "Running setup."
 
 # clear installation
 [ -f /var/run/supervisord.pid ] && supervisorctl stop main:*
-rm -rf /seafile/*
+rm -rf /seafile/ccnet/*
+rm -rf /seafile/seafile-data/*
+rm -rf /seafile/seahub-data/*
+rm -rf /seafile/logs/*
+rm -rf /seafile/conf/*
 
 # temporarily copy installation files to working dir
 cp -r "${SEAFILE_PATH}" /seafile/seafile-server
 
 /seafile/seafile-server/setup-seafile-mysql.sh ${SETUP_SEAFILE_MYSQL_ARGS}
+
+# move generated ccnet configuration from tmp directory to docker volume
+cp -Rf /seafile/ccnet.tmp/* /seafile/ccnet && rm -Rf /seafile/ccnet.tmp
 
 # removing temporary copied installation and set up symlink
 rm -rf /seafile/seafile-server
@@ -39,11 +46,8 @@ rm /seafile/seafile-server-latest
 
 . /scripts/setup-config.sh
 
-mkdir -p /seafile/seahub-data/custom \
-    /seafile/seahub-data/CACHE \
-    /seafile/logs
+mkdir -p /seafile/seahub-data/custom /seafile/seahub-data/CACHE /seafile/logs
 
-touch /seafile/.installed
 [ -f /var/run/supervisord.pid ] && supervisorctl start main:*
 
 echo "Now waiting for processes to start before creating admin user..."

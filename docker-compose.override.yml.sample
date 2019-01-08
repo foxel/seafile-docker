@@ -4,10 +4,12 @@ services:
     ports:
       - "9080:80"
     environment:
-      MYSQL_ROOT_PASSWORD: 'my-root-secret'
-      ADMIN_EMAIL: 'admin@example.com'
-      ADMIN_PASSWORD: 'admin'
-      SEAFILE_URL: 'http://seafile.example.com'
+      MYSQL_ROOT_PASSWORD: my-root-secret
+      ADMIN_EMAIL: admin@example.com
+      ADMIN_PASSWORD: admin
+      SEAFILE_URL: http://seafile.example.com
   mysql:
+    ports:
+      - "9006:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: 'my-root-secret'
+      MYSQL_ROOT_PASSWORD: my-root-secret
