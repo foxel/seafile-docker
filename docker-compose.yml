@@ -1,21 +1,19 @@
-version: '2'
-
+version: '2.2'
 services:
   seafile:
     build: .
-    links:
-      - mysql
     volumes:
-      - seafile:/seafile
+      - seafile-ccnet:/seafile/ccnet
+      - seafile-seafile-data:/seafile/seafile-data
+      - seafile-seahub-data:/seafile/seahub-data
+      - seafile-conf:/seafile/conf
   mysql:
-    environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: 1
+    image: mysql:5.7
     volumes:
       - mysql:/var/lib/mysql
-    image: mysql:5.7
-
 volumes:
-  mysql:
-    driver: local
-  seafile:
-    driver: local
+  mysql: ~
+  seafile-ccnet: ~
+  seafile-seafile-data: ~
+  seafile-seahub-data: ~
+  seafile-conf: ~
