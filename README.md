@@ -13,7 +13,7 @@ version: '2'
 
 services:
   seafile:
-    image: foxel/seafile:6.3.4
+    image: foxel/seafile:7.0.0
     ports:
       - "9080:80"
     environment:
@@ -39,6 +39,11 @@ volumes:
 ## UPGRADING
 
 Upgrading is possible in step-by-step manner:
+
+### 6.3.x => 7.0.x
+```
+docker-compose exec seafile /scripts/upgrade.sh 7.0.0
+```
 
 ### 6.2.x => 6.3.x
 ```
