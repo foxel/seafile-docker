@@ -38,5 +38,8 @@ for folder in ccnet conf logs seafile-data seahub-data; do
    [ -L /opt/seafile/${folder} ] || ln -s /seafile/${folder} /opt/seafile/${folder}
 done
 
+# fix stale seahub PID
+rm -f /var/run/seafile/seahub.pid
+
 exec /usr/bin/supervisord -c /etc/supervisord.conf
 
