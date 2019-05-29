@@ -1,10 +1,10 @@
 #!/bin/bash
 
-if [ ! -f /seafile/.installed ]; then
+if [[ ! -f /seafile/.installed ]]; then
     ln -s /scripts/setup.sh /bin/setup
 
     echo "Please run setup. e.g. docker-compose exec seafile setup"
-    while [ ! -f /seafile/.installed ]; do
+    while [[ ! -f /seafile/.installed ]]; do
         sleep 1
     done
 
@@ -12,30 +12,27 @@ if [ ! -f /seafile/.installed ]; then
     rm /bin/setup
 fi
 
-echo "Waiting for MySQL..."
-while ! mysqladmin ping -hmysql -useafile -pseafile --silent; do
-    sleep 1
-done
+. /scripts/wait-for-mysql.sh
 
 # fix seahub symlinks
-if [ ! -L ${SEAFILE_PATH}/seahub/media/avatars ]; then
+if [[ ! -L ${SEAFILE_PATH}/seahub/media/avatars ]]; then
     rm -rf ${SEAFILE_PATH}/seahub/media/avatars
     ln -s /seafile/seahub-data/avatars ${SEAFILE_PATH}/seahub/media/avatars
 fi
 
-if [ ! -L ${SEAFILE_PATH}/seahub/media/custom ]; then
+if [[ ! -L ${SEAFILE_PATH}/seahub/media/custom ]]; then
     rm -rf ${SEAFILE_PATH}/seahub/media/custom
     ln -s /seafile/seahub-data/custom ${SEAFILE_PATH}/seahub/media/custom
 fi
 
-if [ ! -L ${SEAFILE_PATH}/seahub/media/CACHE ]; then
+if [[ ! -L ${SEAFILE_PATH}/seahub/media/CACHE ]]; then
     rm -rf ${SEAFILE_PATH}/seahub/media/CACHE
     ln -s /seafile/seahub-data/CACHE ${SEAFILE_PATH}/seahub/media/CACHE
 fi
 
 # fix seafile install path symlinks
 for folder in ccnet conf logs seafile-data seahub-data; do
-   [ -L /opt/seafile/${folder} ] || ln -s /seafile/${folder} /opt/seafile/${folder}
+   [[ -L /opt/seafile/${folder} ]] || ln -s /seafile/${folder} /opt/seafile/${folder}
 done
 
 # fix stale seahub PID

@@ -2,18 +2,20 @@
 
 set -e
 
-if [ -f /seafile/.installed ]; then
+if [[ -f /seafile/.installed ]]; then
     echo "Looks like seafile setup already complete"
     exit 1
 fi
 
 # clear installation
-[ -f /var/run/supervisord.pid ] && supervisorctl stop all
+[[ -f /var/run/supervisord.pid ]] && supervisorctl stop all
 rm -rf /seafile/*
+
+. /scripts/wait-for-mysql.sh
 
 MYSQL_ROOT_PW="$1"
 
-[ -z "${MYSQL_ROOT_PW}" ] && echo "Now you will be asked for MySQL root password:"
+[[ -z "${MYSQL_ROOT_PW}" ]] && echo "Now you will be asked for MySQL root password:"
 
 mysql -hmysql -uroot -p${MYSQL_ROOT_PW} <<'EOF'
 DROP DATABASE IF EXISTS `ccnet_db`;
@@ -45,7 +47,7 @@ rm -rf /seafile/seafile-server
 rm /seafile/seafile-server-latest
 
 read HOST_IP <<< `hostname -I`
-[ -z "${SEAFILE_URL}" ] && SEAFILE_URL="http://${HOST_IP}"
+[[ -z "${SEAFILE_URL}" ]] && SEAFILE_URL="http://${HOST_IP}"
 
 crudini --set /seafile/conf/ccnet.conf General SERVICE_URL "${SEAFILE_URL}"
 
@@ -79,11 +81,14 @@ mkdir -p /seafile/seahub-data/custom \
 chown -R seafile:seafile /seafile/*
 
 touch /seafile/.installed
-[ -f /var/run/supervisord.pid ] && supervisorctl start all
+[[ -f /var/run/supervisord.pid ]] && supervisorctl start all
 
 echo "Now waiting for processes to start before creating admin user..."
+while [[ ! -f /var/run/supervisord.pid ]] || (supervisorctl status | grep -v RUNNING); do
+    sleep 10
+done
 
-sleep 10
+sleep 5
 
 exec /scripts/check-admin-user.sh
 
