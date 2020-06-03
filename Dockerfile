@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 ENV LANG=C.UTF-8 \
     DEBIAN_FRONTEND=noninteractive
@@ -6,16 +6,22 @@ ENV LANG=C.UTF-8 \
 RUN \
     apt-get update && \
     apt-get install --no-install-recommends -y \
-        wget mysql-client supervisor nginx crudini ffmpeg python-pip \
-        python2.7 libpython2.7 python-setuptools python-imaging python-sqlalchemy \
-        python-ldap python-mysqldb python-pylibmc python-urllib3 \
-        python-pil python-numpy && \
-    pip install moviepy==1.0.0 django-pylibmc==0.6.1 && \
-    apt-get remove -y --purge --autoremove python-pip && \
+        wget mysql-client nginx ffmpeg python3 python3-pip python3-setuptools \
+        python3-pil python3-jinja2 python3-sqlalchemy \
+        python3-ldap3 python3-mysqldb python3-pylibmc python3-urllib3 && \
+    ln -s /usr/bin/python3 /usr/bin/python && \
+    pip3 install supervisor iniparse \
+        pillow moviepy captcha django-pylibmc django-simple-captcha && \
+    apt-get remove -y --purge --autoremove python3-pip && \
     rm -rf /var/lib/apt/lists/* && \
     rm -f /etc/nginx/sites-enabled/*
 
-ENV SEAFILE_VERSION 7.0.5
+# crudini for python3
+RUN \
+    wget -qO /usr/local/bin/crudini https://raw.githubusercontent.com/pixelb/crudini/0.9.3/crudini && \
+    chmod +x /usr/local/bin/crudini
+
+ENV SEAFILE_VERSION 7.1.3
 ENV SEAFILE_PATH "/opt/seafile/$SEAFILE_VERSION"
 
 RUN \
@@ -38,7 +44,7 @@ RUN \
     mkdir -p /seafile && \
     # seafile user
     useradd -r -s /bin/false seafile && \
-    chown seafile:seafile /run/seafile
+    chown seafile:seafile /run/seafile /opt/seafile/latest/runtime
 
 WORKDIR "/seafile"
 
