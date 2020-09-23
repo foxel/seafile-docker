@@ -21,7 +21,7 @@ RUN \
     wget -qO /usr/local/bin/crudini https://raw.githubusercontent.com/pixelb/crudini/0.9.3/crudini && \
     chmod +x /usr/local/bin/crudini
 
-ENV SEAFILE_VERSION 7.1.4
+ENV SEAFILE_VERSION 7.1.5
 ENV SEAFILE_PATH "/opt/seafile/$SEAFILE_VERSION"
 
 RUN \
