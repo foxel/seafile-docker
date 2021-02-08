@@ -9,6 +9,7 @@ SQL_BASE_PATH="/opt/seafile/latest/upgrade/sql/${UPGRADE_VERSION}/mysql"
 # stop server
 [[ -f /var/run/supervisord.pid ]] && supervisorctl stop all
 
+# seafevents is for Pro only, ignored for now
 for db in ccnet seafile seahub; do
     SQL_FILE="${SQL_BASE_PATH}/${db}.sql"
     if [[ -f "${SQL_FILE}" ]]; then

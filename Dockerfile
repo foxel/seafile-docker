@@ -1,17 +1,29 @@
+FROM ubuntu:18.04 as mysqlclient-builder
+RUN apt-get update
+
+RUN apt-get install --no-install-recommends -y \
+        python3 python3-pip python3-setuptools python3-wheel \
+        libmysqlclient-dev python3-dev build-essential
+
+RUN pip3 wheel --no-cache-dir mysqlclient
+
 FROM ubuntu:18.04
 
 ENV LANG=C.UTF-8 \
     DEBIAN_FRONTEND=noninteractive
 
+COPY --from=mysqlclient-builder /mysqlclient-*.whl /tmp/
+
 RUN \
     apt-get update && \
     apt-get install --no-install-recommends -y \
-        wget mysql-client nginx ffmpeg python3 python3-pip python3-setuptools \
+        wget mysql-client libmysqlclient20 nginx ffmpeg python3 python3-pip python3-setuptools \
         python3-pil python3-jinja2 python3-sqlalchemy \
-        python3-ldap3 python3-mysqldb python3-pylibmc python3-urllib3 && \
+        python3-ldap3 python3-pylibmc python3-urllib3 && \
     ln -s /usr/bin/python3 /usr/bin/python && \
-    pip3 install supervisor iniparse \
-        pillow moviepy captcha django-pylibmc django-simple-captcha && \
+    pip3 install --no-cache-dir supervisor iniparse \
+        future pillow moviepy captcha django-pylibmc django-simple-captcha \
+        /tmp/mysqlclient-*.whl && \
     apt-get remove -y --purge --autoremove python3-pip && \
     rm -rf /var/lib/apt/lists/* && \
     rm -f /etc/nginx/sites-enabled/*
@@ -21,7 +33,7 @@ RUN \
     wget -qO /usr/local/bin/crudini https://raw.githubusercontent.com/pixelb/crudini/0.9.3/crudini && \
     chmod +x /usr/local/bin/crudini
 
-ENV SEAFILE_VERSION 7.1.5
+ENV SEAFILE_VERSION 8.0.3
 ENV SEAFILE_PATH "/opt/seafile/$SEAFILE_VERSION"
 
 RUN \
