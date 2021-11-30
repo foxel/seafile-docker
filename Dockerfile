@@ -33,7 +33,7 @@ RUN \
     wget -qO /usr/local/bin/crudini https://raw.githubusercontent.com/pixelb/crudini/0.9.3/crudini && \
     chmod +x /usr/local/bin/crudini
 
-ENV SEAFILE_VERSION 9.0.0
+ENV SEAFILE_VERSION 9.0.1
 ENV SEAFILE_PATH "/opt/seafile/$SEAFILE_VERSION"
 
 RUN \
