@@ -19,7 +19,7 @@ RUN \
     apt-get install --no-install-recommends -y \
         wget mysql-client libmysqlclient20 nginx ffmpeg python3 python3-pip python3-setuptools \
         python3-pil python3-jinja2 python3-sqlalchemy \
-        python3-ldap3 python3-pylibmc python3-urllib3 && \
+        python3-ldap3 python3-pylibmc python3-urllib3 python3-lxml && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     pip3 install --no-cache-dir supervisor iniparse \
         future pillow moviepy captcha django-pylibmc django-simple-captcha \
@@ -33,7 +33,7 @@ RUN \
     wget -qO /usr/local/bin/crudini https://raw.githubusercontent.com/pixelb/crudini/0.9.3/crudini && \
     chmod +x /usr/local/bin/crudini
 
-ENV SEAFILE_VERSION 9.0.6
+ENV SEAFILE_VERSION 9.0.7
 ENV SEAFILE_PATH "/opt/seafile/$SEAFILE_VERSION"
 
 RUN \
