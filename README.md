@@ -13,7 +13,7 @@ version: '2'
 
 services:
   seafile:
-    image: foxel/seafile:9.0.10
+    image: foxel/seafile:10.0.0
     ports:
       - "9080:80"
     environment:
@@ -39,6 +39,11 @@ volumes:
 ## UPGRADING
 
 Upgrading is possible in step-by-step manner:
+
+### 9.0.x => 10.0.x
+```
+docker-compose exec seafile /scripts/upgrade.sh 10.0.0
+```
 
 ### 8.0.x => 9.0.x
 ```
