@@ -55,7 +55,15 @@ crudini --merge /seafile/conf/seafile.conf <<'EOF'
 [fileserver]
 port = 8082
 host = 127.0.0.1
+
+[notification]
+enabled = true
+host = 127.0.0.1
+port = 8083
+log_level = info
 EOF
+
+crudini --set /seafile/conf/seafile.conf notification jwt_private_key "$(openssl rand -base64 32)"
 
 crudini --merge /seafile/conf/seafdav.conf <<'EOF'
 [WEBDAV]

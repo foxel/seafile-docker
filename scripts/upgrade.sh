@@ -24,6 +24,19 @@ mkdir -p /seafile/seahub-data/custom \
 
 chown -R seafile:seafile /seafile/*
 
+# enable the notification service for v10
+if [[ "${UPGRADE_VERSION}" = "10.0.0" ]]; then
+crudini --merge /seafile/conf/seafile.conf <<'EOF'
+[notification]
+enabled = true
+host = 127.0.0.1
+port = 8083
+log_level = info
+EOF
+
+crudini --set /seafile/conf/seafile.conf notification jwt_private_key "$(openssl rand -base64 32)"
+fi
+
 # starting server
 [[ -f /var/run/supervisord.pid ]] && supervisorctl start all
 
