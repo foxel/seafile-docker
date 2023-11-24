@@ -13,7 +13,8 @@ SQL_BASE_PATH="/opt/seafile/latest/upgrade/sql/${UPGRADE_VERSION}/mysql"
 for db in ccnet seafile seahub; do
     SQL_FILE="${SQL_BASE_PATH}/${db}.sql"
     if [[ -f "${SQL_FILE}" ]]; then
-        mysql -hmysql -useafile -pseafile -f "${db}_db" < "${SQL_FILE}"
+      # replaces `ADD INDEX IF NOT EXISTS` with `ADD INDEX` because it's not supported by MySQL 8
+      sed -e 's/ADD\s*INDEX\s*IF\s*NOT\s*EXISTS/ADD INDEX/g' "${SQL_FILE}" | mysql -hmysql -useafile -pseafile -f "${db}_db"
     fi
 done
 

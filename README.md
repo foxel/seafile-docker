@@ -13,7 +13,7 @@ version: '2'
 
 services:
   seafile:
-    image: foxel/seafile:10.0.1
+    image: foxel/seafile:11.0.1
     ports:
       - "9080:80"
     environment:
@@ -27,7 +27,7 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: 1
     volumes:
       - mysql:/var/lib/mysql
-    image: mysql:5.7
+    image: mysql:8.0
 
 volumes:
   mysql:
@@ -39,6 +39,15 @@ volumes:
 ## UPGRADING
 
 Upgrading is possible in step-by-step manner:
+
+### 10.0.x => 11.0.x
+```
+docker-compose exec seafile /scripts/upgrade.sh 11.0.0
+```
+
+Notes:
+* version 11 requires MySQL 8. Note the updated version in compose file example above. The container will do the upgrade on first start.
+* django 4 uses new CSRF token security policy. Make sure the SSL termination is set up to correctly set `X-Forwarded-Proto` and `Host` headers.
 
 ### 9.0.x => 10.0.x
 ```
