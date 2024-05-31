@@ -73,3 +73,5 @@ VOLUME "/seafile"
 EXPOSE 80
 
 CMD ["/scripts/startup.sh"]
+
+LABEL org.opencontainers.image.source=https://github.com/foxel/seafile-docker
