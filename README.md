@@ -13,7 +13,7 @@ version: '2'
 
 services:
   seafile:
-    image: ghcr.io/foxel/seafile-docker/seafile:11.0.11
+    image: ghcr.io/foxel/seafile-docker/seafile:11.0.12
     ports:
       - "9080:80"
     environment:
