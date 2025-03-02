@@ -1,6 +1,13 @@
 # seafile-docker
 Seafile docker image for swift setup
 
+# ⚠️ Not maintained anymore
+
+This repository is not maintained anymore. 
+ If you're new to Seafile, please use the [official Seafile docker setup guide](https://manual.seafile.com/latest/setup/setup_ce_by_docker/) instead.
+
+To migrate from `foxel/seafile-docker` to the official images, see the [migration guide](migrate_to_haiwen.md).
+
 ## Getting started (docker-compose setup)
 * prepare docker-compose.yml (see example below)
 * start the system with `docker-compose up -d`
